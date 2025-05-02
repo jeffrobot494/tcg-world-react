@@ -1,0 +1,30 @@
+src/
+├── components/
+│   ├── common/
+│   │   ├── Navbar.jsx       # Top navigation bar used everywhere
+│   │   ├── Button.jsx       # Reusable button component 
+│   │   ├── Card.jsx         # Base card component (abstract)
+│   │   └── Table.jsx        # Generic table component
+│   ├── dashboard/
+│   │   ├── GameCard.jsx     # Game cards for dashboard
+│   │   ├── GameGrid.jsx     # Grid layout for game cards
+│   │   └── DashboardStats.jsx # Stats section
+│   ├── cardManager/
+│   │   ├── CardManagerControls.jsx # Controls above the cards table
+│   │   ├── CardTable.jsx    # Table for displaying cards
+│   │   ├── CardRow.jsx      # Row in the card table
+│   │   └── Pagination.jsx   # Pagination component
+│   └── deckBuilder/
+│       ├── DeckBuilderControls.jsx # Controls for deck builder
+│       ├── CardGrid.jsx     # Grid of cards to select from
+│       ├── CardCard.jsx     # Card representation in the grid
+│       ├── DeckList.jsx     # List of cards in the deck
+│       ├── DeckControls.jsx # Controls for the deck
+│       └── DeckCard.jsx     # Card in the deck list
+├── pages/
+│   ├── Dashboard.jsx        # Creator dashboard page
+│   ├── CardManager.jsx      # Card manager page
+│   └── DeckBuilder.jsx      # Deck builder page
+├── context/
+│   └── UserContext.jsx      # User context (default to creator)
+└── App.jsx

@@ -1,0 +1,82 @@
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  flex: 1;
+  width: 100%;
+}
+
+.dashboardHeader {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.dashboardTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.625rem;
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.dashboardSubtitle {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.createBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--accent);
+  color: white;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  margin-top: 0.625rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-decoration: none;
+}
+
+.createBtn:hover {
+  background-color: var(--accent-hover);
+  text-decoration: none;
+}
+
+.createBtn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.viewAll {
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1.25rem;
+  }
+}
