@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Page Editor - Legends of the Dragon Wars</title>
+    <style>
+        :root {
+            /* Editor Variables */
+            --editor-bg-dark: #111827;
+            --editor-bg-medium: #1f2937;
+            --editor-bg-light: #374151;
+            --editor-border: #4b5563;
+            --editor-text: #d1d5db;
+            --editor-text-dim: #9ca3af;
+
+            /* Navbar & Common Accent Variables */
+            --accent: #3b82f6;          /* Navbar blue, primary accent */
+            --accent-hover: #2563eb;    /* Darker blue */
+            --text-primary-dark: #f1f5f9; /* For consistency if needed */
+
+            /* Editor Specific Heights */
+            --editor-top-bar-height: 50px;
+            --editor-toolbar-height: 40px;
+            --editor-inspector-width: 280px;
+
+             /* Added from Navbar context for completeness */
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: var(--editor-bg-dark);
+            color: var(--editor-text);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden; /* Prevent body scrollbars */
+        }
+
+        /* --- Navbar Styles (Copied) --- */
+        .navbar {
+            background-color: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            flex-shrink: 0; /* Prevent shrinking */
+            z-index: 1000; /* Ensure it's above other elements */
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .tcg-world-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            margin-right: 16px;
+            transition: opacity 0.2s;
+        }
+
+        .tcg-world-link:hover {
+            opacity: 0.85;
+            text-decoration: none;
+        }
+
+        .tcg-world-icon {
+            width: 28px;
+            height: 28px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin: 0 16px;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center; /* Align items vertically */
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.2s, background-color 0.2s;
+            padding: 6px 10px;
+            border-radius: 4px;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.85;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+         .nav-links a.active { /* Style for active link */
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.15); /* Slightly darker active bg */
+        }
+
+        .profile-icon {
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .profile-icon:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        /* --- End Navbar Styles --- */
+
+
+        /* --- Editor UI Elements --- */
+
+        /* 1. Top LLM Prompt Bar */
+        .editor-top-bar {
+            height: var(--editor-top-bar-height);
+            background-color: var(--editor-bg-medium);
+            border-bottom: 1px solid var(--editor-border);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 15px;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+        .llm-prompt-label {
+            font-weight: 500;
+            color: var(--editor-text-dim);
+            white-space: nowrap;
+        }
+
+        .llm-prompt-input {
+            flex-grow: 1;
+            background-color: var(--editor-bg-light);
+            border: 1px solid var(--editor-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--editor-text);
+            font-size: 0.9rem;
+        }
+
+        .llm-prompt-input:focus {
+            outline: none;
+            border-color: var(--accent); /* Use consistent accent */
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+        }
+
+        .llm-submit-btn {
+            background-color: var(--accent); /* Use consistent accent */
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+
+        .llm-submit-btn:hover {
+            background-color: var(--accent-hover); /* Use consistent accent hover */
+        }
+
+        /* Save/Preview buttons using toolbar style for consistency */
+         .editor-top-bar .toolbar-btn {
+             margin-left: 5px;
+         }
+
+        /* 2. WYSIWYG Toolbar */
+        .wysiwyg-toolbar {
+            height: var(--editor-toolbar-height);
+            background-color: var(--editor-bg-medium);
+            border-bottom: 1px solid var(--editor-border);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            gap: 5px;
+            flex-shrink: 0;
+            overflow-x: auto;
+        }
+
+        .toolbar-btn {
+            background: none;
+            border: none;
+            color: var(--editor-text-dim);
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+            transition: background-color 0.2s, color 0.2s;
+            min-width: 30px;
+            text-align: center;
+        }
+         .toolbar-btn:hover {
+            background-color: var(--editor-bg-light);
+            color: var(--editor-text);
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 60%;
+            background-color: var(--editor-border);
+            margin: 0 5px;
+        }
+
+        /* 3. Main Content Area (Iframe + Inspector) */
+        .editor-main-content {
+            display: flex;
+            flex-grow: 1; /* Take remaining vertical space */
+            overflow: hidden;
+        }
+
+        /* 4. Editing Area (Iframe Wrapper) */
+        .editor-editing-area {
+            flex-grow: 1;
+            position: relative;
+            background-color: #fff; /* Fallback bg behind iframe */
+            display: flex; /* Ensure iframe stretches */
+            flex-direction: column;
+        }
+
+        #content-iframe {
+            width: 100%;
+            height: 100%; /* Let flexbox handle height */
+            border: none;
+            display: block;
+            flex-grow: 1; /* Make iframe fill the space */
+        }
+
+        /* 5. Style Inspector Panel */
+        .style-inspector {
+            width: var(--editor-inspector-width);
+            background-color: var(--editor-bg-medium);
+            border-left: 1px solid var(--editor-border);
+            padding: 15px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .inspector-section-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--editor-text-dim);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--editor-border);
+        }
+
+        .inspector-property {
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .inspector-property label {
+            font-size: 0.85rem;
+            color: var(--editor-text-dim);
+        }
+
+        .inspector-property input,
+        .inspector-property select {
+            width: 100%;
+            background-color: var(--editor-bg-light);
+            border: 1px solid var(--editor-border);
+            border-radius: 4px;
+            padding: 6px 8px;
+            color: var(--editor-text);
+            font-size: 0.85rem;
+        }
+        .inspector-property input:focus,
+        .inspector-property select:focus {
+             outline: none;
+            border-color: var(--accent); /* Consistent accent */
+        }
+         .inspector-property input[type="color"] {
+             padding: 2px; /* Adjust padding for color input */
+             height: 30px; /* Ensure consistent height */
+         }
+
+        /* Placeholder icons */
+        .icon-bold::before { content: 'B'; font-weight: bold; }
+        .icon-italic::before { content: 'I'; font-style: italic; }
+        .icon-underline::before { content: 'U'; text-decoration: underline; }
+        .icon-link::before { content: '🔗'; }
+        .icon-image::before { content: '🖼️'; }
+        .icon-h1::before { content: 'H1'; font-size: 0.8em; font-weight: bold; }
+        .icon-h2::before { content: 'H2'; font-size: 0.8em; font-weight: bold; }
+        .icon-list-ul::before { content: '• list'; font-size: 0.8em; }
+        .icon-list-ol::before { content: '1. list'; font-size: 0.8em; }
+        .icon-align-left::before { content: '←'; font-size: 1.2em; }
+        .icon-align-center::before { content: '↔'; font-size: 1.2em; }
+        .icon-align-right::before { content: '→'; font-size: 1.2em; }
+        .icon-code::before { content: '</>'; font-weight: bold; }
+
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="#" class="tcg-world-link" title="Back to TCG World">
+                <div class="tcg-world-icon">🃏</div>
+                <span>TCG World</span>
+            </a>
+            <div class="nav-divider"></div>
+            <h1>Legends of the Dragon Wars</h1>
+        </div>
+        <div class="nav-links">
+            <!-- Updated links for editor context -->
+            <a href="#">Dashboard</a>
+            <a href="#" class="active">Game Page Editor</a>
+            <a href="#">Card Manager</a>
+            <a href="#">Deck Builder</a>
+            <div class="profile-icon" title="User Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. Top LLM Prompt Bar -->
+    <div class="editor-top-bar">
+        <label for="llm-prompt" class="llm-prompt-label">AI Prompt:</label>
+        <input type="text" id="llm-prompt" class="llm-prompt-input" placeholder="e.g., 'Make the hero section background darker and add a subtle glow to the title'">
+        <button class="llm-submit-btn">Generate & Apply</button>
+        <!-- Save/Preview Buttons -->
+         <button class="toolbar-btn" title="Save Changes">💾</button>
+         <button class="toolbar-btn" title="Preview Page">👁️</button>
+    </div>
+
+    <!-- 2. WYSIWYG Toolbar -->
+    <div class="wysiwyg-toolbar">
+        <button class="toolbar-btn icon-bold" title="Bold"></button>
+        <button class="toolbar-btn icon-italic" title="Italic"></button>
+        <button class="toolbar-btn icon-underline" title="Underline"></button>
+        <div class="toolbar-separator"></div>
+        <button class="toolbar-btn icon-h1" title="Heading 1"></button>
+        <button class="toolbar-btn icon-h2" title="Heading 2"></button>
+        <div class="toolbar-separator"></div>
+        <button class="toolbar-btn icon-list-ul" title="Unordered List"></button>
+        <button class="toolbar-btn icon-list-ol" title="Ordered List"></button>
+        <div class="toolbar-separator"></div>
+        <button class="toolbar-btn icon-link" title="Insert Link"></button>
+        <button class="toolbar-btn icon-image" title="Insert Image"></button>
+        <div class="toolbar-separator"></div>
+        <button class="toolbar-btn icon-align-left" title="Align Left"></button>
+        <button class="toolbar-btn icon-align-center" title="Align Center"></button>
+        <button class="toolbar-btn icon-align-right" title="Align Right"></button>
+         <div class="toolbar-separator"></div>
+        <button class="toolbar-btn icon-code" title="Edit HTML"></button>
+        <!-- Add more buttons as needed -->
+    </div>
+
+    <!-- 3. Main Content Area -->
+    <div class="editor-main-content">
+        <!-- 4. Editing Area (Iframe Wrapper) -->
+        <div class="editor-editing-area">
+            <!-- Make sure game-view.html exists in the same directory -->
+            <iframe id="content-iframe" src="game-view.html" title="Editable Content"></iframe>
+        </div>
+
+        <!-- 5. Style Inspector Panel -->
+        <div class="style-inspector">
+            <div class="inspector-section-title">Selected Element</div>
+            <!-- Placeholder: Show element type -->
+            <p id="selected-element-placeholder" style="margin-bottom: 15px; color: var(--accent); font-style: italic;">(Select an element in the iframe)</p>
+
+            <div class="inspector-section-title">Layout</div>
+            <div class="inspector-property">
+                <label>Margin (T R B L)</label>
+                <input type="text" placeholder="0px 0px 0px 0px">
+            </div>
+             <div class="inspector-property">
+                <label>Padding (T R B L)</label>
+                <input type="text" placeholder="0px 0px 0px 0px">
+            </div>
+             <div class="inspector-property">
+                <label>Display</label>
+                <select>
+                    <option>block</option>
+                    <option>inline</option>
+                    <option>inline-block</option>
+                    <option>flex</option>
+                    <option>grid</option>
+                    <option>none</option>
+                </select>
+            </div>
+
+            <div class="inspector-section-title">Typography</div>
+             <div class="inspector-property">
+                <label>Font Size</label>
+                <input type="text" placeholder="16px">
+            </div>
+             <div class="inspector-property">
+                <label>Color</label>
+                <input type="color" value="#d1d5db"> <!-- Default to editor text color -->
+            </div>
+             <div class="inspector-property">
+                <label>Font Weight</label>
+                <select>
+                    <option>normal</option>
+                    <option>bold</option>
+                    <option>100</option>
+                    <option>...</option> <!-- Add specific weights if needed -->
+                    <option>900</option>
+                </select>
+            </div>
+
+            <div class="inspector-section-title">Background</div>
+             <div class="inspector-property">
+                <label>Background Color</label>
+                <input type="color" value="#1f2937"> <!-- Default to medium bg -->
+            </div>
+
+            <!-- Add more inspector sections (Border, Flexbox, Grid etc.) -->
+        </div>
+    </div>
+
+    <!-- Basic JS could be added here later to handle interactions,
+         like showing selected element info in the inspector,
+         but this is purely a static HTML/CSS wireframe for now. -->
+     <script>
+         // Basic placeholder interaction for iframe selection (conceptual)
+         const iframe = document.getElementById('content-iframe');
+         const placeholder = document.getElementById('selected-element-placeholder');
+
+         if (iframe && placeholder) {
+             iframe.addEventListener('load', function() {
+                 try {
+                     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                     iframeDoc.body.addEventListener('click', function(event) {
+                         // In a real editor, you'd prevent default actions and highlight the element
+                         const targetElement = event.target;
+                         if (targetElement && targetElement.tagName) {
+                              placeholder.textContent = `Selected: <${targetElement.tagName.toLowerCase()}>`;
+                              // In a real app, you'd populate the inspector panel here
+                         }
+                     }, true); // Use capture phase to catch clicks early
+                 } catch (e) {
+                     console.warn("Could not add click listener to iframe content - possibly due to cross-origin restrictions if src is remote.", e);
+                      placeholder.textContent = "(Cannot inspect iframe content)";
+                      placeholder.style.color = 'var(--danger)';
+                 }
+             });
+         }
+     </script>
+
+</body>
+</html>

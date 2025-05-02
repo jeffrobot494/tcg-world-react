@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCG Card Manager - Legends of the Dragon Wars</title>
+    <style>
+        /* Define root variables - combining from both files for consistency */
+        :root {
+            --bg-primary-dark: #0f172a;
+            --bg-secondary-dark: #1e293b;
+            --bg-tertiary-dark: #334155;
+            --text-primary-dark: #f1f5f9;
+            --text-secondary-dark: #94a3b8;
+            --border-dark: #475569;
+
+            --bg-primary-light: #f5f7fa;      /* Light background */
+            --bg-secondary-light: #ffffff;    /* White for cards */
+            --text-primary-light: #333;       /* Dark grey/black text */
+            --text-secondary-light: #6c757d; /* Medium grey text */
+            --border-light: #eee;            /* Light grey border */
+
+            --accent: #3b82f6;              /* Navbar blue, used as main accent now */
+            --accent-hover: #2563eb;        /* Darker blue */
+
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --monster-color: #ffd699;
+            --spell-color: #d9b3ff;
+            --trap-color: #ff99cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            /* Removed body padding, will add to container */
+            background-color: var(--bg-primary-light); /* Using light theme bg */
+            color: var(--text-primary-light); /* Using light theme text */
+        }
+
+        /* --- Navbar Styles (Copied from game-manager-creator.html) --- */
+        .navbar {
+            background-color: var(--accent); /* Use variable */
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            /* Make it sticky if desired */
+            /* position: sticky;
+            top: 0;
+            z-index: 1000; */
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .tcg-world-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            margin-right: 16px;
+            transition: opacity 0.2s;
+        }
+
+        .tcg-world-link:hover {
+            opacity: 0.85;
+            text-decoration: none;
+        }
+
+        .tcg-world-icon {
+            width: 28px;
+            height: 28px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin: 0 16px;
+        }
+
+        .navbar h1 { /* Scoped h1 to navbar */
+            margin: 0;
+            font-size: 22px; /* Adjusted from creator page */
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center; /* Align items vertically */
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.2s;
+            padding: 6px 10px; /* Add some padding */
+            border-radius: 4px;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.85;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .nav-links a.active { /* Style for active link */
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-icon {
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .profile-icon:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        /* --- End Navbar Styles --- */
+
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--bg-secondary-light); /* White */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 20px; /* Add space below the navbar */
+        }
+
+        /* Keep H1 style for container title distinct from navbar */
+        .container > h1 {
+            margin-top: 0;
+            color: var(--text-primary-light);
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        /* Removed the old .header styles */
+
+        .actions { /* Style for button groups */
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap; /* Allow wrapping */
+        }
+
+        button, .button { /* General button styling */
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex; /* Use inline-flex */
+            align-items: center;
+            gap: 8px; /* Increased gap */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            border-radius: 4px; /* Add border-radius */
+            transition: background-color 0.2s;
+            font-size: 14px; /* Standardize font size */
+        }
+        button:hover, .button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        button svg, .button svg { /* Ensure SVGs scale well */
+            width: 16px;
+            height: 16px;
+        }
+
+        button.secondary {
+            background-color: #e9ecef; /* Lighter grey */
+            color: var(--text-primary-light);
+            border: 1px solid #dee2e6; /* Subtle border */
+        }
+        button.secondary:hover {
+            background-color: #ced4da;
+            border-color: #adb5bd;
+        }
+
+        /* Make certain cells unselectable */
+        .unselectable-cell {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Add column button styling */
+        .add-column-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        .add-column-btn:hover {
+             background-color: var(--accent-hover);
+        }
+
+        /* Table container needs relative positioning */
+        .table-container {
+            position: relative;
+            margin-bottom: 20px;
+            overflow-x: auto; /* Allow horizontal scroll on small screens */
+        }
+
+        /* Mark selectable cells explicitly */
+        .selectable-cell {
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+
+        /* Add a subtle highlight on hover for copyable cells */
+        .selectable-cell:hover {
+            background-color: rgba(59, 130, 246, 0.05); /* Use accent color */
+        }
+
+        /* Improved selection for unselectable columns */
+        table tr th:nth-child(1),
+        table tr td:nth-child(1),
+        table tr th:nth-child(2),
+        table tr td:nth-child(2) {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-box {
+            padding: 8px 12px;
+            border: 1px solid #ced4da; /* Lighter border */
+            border-radius: 4px;
+            width: 250px;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--border-light);
+            font-size: 14px;
+            border-spacing: 0; /* Remove cell spacing */
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px; /* Slightly more padding */
+            background-color: #f8f9fa; /* Very light grey header */
+            font-weight: 600;
+            color: var(--text-primary-light);
+            border: 1px solid var(--border-light);
+            white-space: nowrap;
+            position: sticky; /* Make header sticky? Optional */
+            top: 0; /* Adjust if navbar is sticky */
+            z-index: 10;
+        }
+        td {
+            padding: 8px 12px; /* Consistent padding */
+            border: 1px solid var(--border-light);
+            vertical-align: middle;
+            color: var(--text-secondary-light); /* Slightly dimmer text for data */
+        }
+        td.selectable-cell {
+            color: var(--text-primary-light); /* Make selectable text darker */
+        }
+
+        tr:nth-child(even) {
+            background-color: #fdfdff; /* Very subtle striping */
+        }
+        tr:hover {
+            background-color: #f1f3f5; /* Slightly darker hover */
+        }
+        .thumbnail {
+            width: 40px;
+            height: 60px;
+            background-color: #e9ecef; /* Lighter placeholder bg */
+            object-fit: cover;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            pointer-events: none;
+            border-radius: 2px; /* Slight rounding */
+            display: block; /* Prevents extra space */
+        }
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            margin: 0 auto; /* Center checkbox */
+            display: block; /* Ensure block display */
+            padding: 0;
+        }
+        td:first-child { /* Center checkbox cell content */
+            text-align: center;
+        }
+        th:first-child {
+             text-align: center;
+        }
+
+        /* Make all text plain for better copy/paste */
+        .card-name, .filename, .card-type, .monster, .spell, .trap {
+            font-weight: normal;
+            font-family: inherit;
+            color: inherit;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px; /* Increased padding */
+            border-top: 1px solid var(--border-light);
+            font-size: 14px;
+            color: var(--text-secondary-light);
+            flex-wrap: wrap; /* Allow wrapping */
+            gap: 10px; /* Add gap for wrapping */
+        }
+        .page-controls {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .page-button {
+            padding: 5px 10px; /* Adjust padding */
+            border: 1px solid #ced4da;
+            background-color: white;
+            cursor: pointer;
+            color: var(--text-primary-light);
+            border-radius: 4px;
+            line-height: 1; /* Ensure consistent height */
+            min-width: 30px; /* Minimum width */
+            text-align: center;
+        }
+        .page-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .page-button.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .page-button:not(.active):hover {
+             background-color: #f8f9fa;
+        }
+        .per-page {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        select {
+            padding: 6px 10px; /* Consistent padding */
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            background-color: white; /* Ensure white background */
+            font-size: 14px;
+        }
+
+        /* Spreadsheet-specific styles */
+        #spreadsheet-controls {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .copy-message {
+            display: none;
+            background-color: #d1e7dd; /* Bootstrap success bg */
+            border: 1px solid #badbcc; /* Bootstrap success border */
+            color: #0f5132; /* Bootstrap success text */
+            padding: 8px 12px; /* Adjust padding */
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        /* Edit mode styles */
+        .edit-mode .type-cell {
+            position: relative;
+        }
+
+        .type-dropdown {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid var(--accent); /* Highlight border */
+            border-radius: 4px;
+            background-color: white;
+            font-size: 14px;
+        }
+
+        /* Highlight edited cells */
+        .edited {
+            background-color: rgba(59, 130, 246, 0.1) !important; /* Use !important if needed */
+            outline: 1px solid var(--accent);
+            outline-offset: -1px;
+        }
+
+        /* Sort icon styling */
+        .sortable {
+            cursor: pointer;
+            position: relative;
+            padding-right: 25px !important; /* Make room for the icon */
+        }
+        
+        .sort-icon {
+            position: absolute;
+            right: 8px;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        
+        .sortable:hover .sort-icon {
+            opacity: 1;
+        }
+        
+        .sort-asc .sort-icon {
+            opacity: 1;
+        }
+        
+        .sort-asc .sort-icon::after {
+            content: "↑";
+        }
+        
+        .sort-desc .sort-icon {
+            opacity: 1;
+        }
+        
+        .sort-desc .sort-icon::after {
+            content: "↓";
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar (Copied from game-manager-creator.html) -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="#" class="tcg-world-link" title="Back to TCG World">
+                <div class="tcg-world-icon">🃏</div>
+                <span>TCG World</span>
+            </a>
+            <div class="nav-divider"></div>
+            <h1>Legends of the Dragon Wars</h1>
+        </div>
+        <div class="nav-links">
+            <!-- Add links relevant to this context, e.g., back to dashboard -->
+            <a href="#">Dashboard</a>
+            <a href="#" class="active">Card Manager</a>
+            <a href="#">Deck Builder</a>
+            <div class="profile-icon" title="User Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Container Title (Removed from old header) -->
+        <h1>Card Manager</h1>
+
+        <!-- Top actions (Search, Add Card, etc.) -->
+        <div class="actions">
+            <input type="text" class="search-box" placeholder="Search cards...">
+            <button class="secondary">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46V19l4 2v-8.54L22 3z"></polygon></svg>
+                Filter
+            </button>
+            <button>
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Card
+            </button>
+            <button class="secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Export to CSV
+            </button>
+        </div>
+
+        <!-- Table actions (Edit, Delete, Copy) -->
+        <div class="actions">
+            <button id="edit-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Edit
+            </button>
+            <button class="secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Delete Selected
+            </button>
+            <button class="secondary" id="copy-table-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy Table Data
+            </button>
+            <button class="secondary" id="manual-select-btn">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 3 21 18 21"></polygon><path d="M7 17v-4.47l4-4L15 12.53V17H7z"></path><path d="M7 10.5a2.5 2.5 0 0 1-5 0V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2.5 2.5 0 0 1-5 0Z"></path><path d="M15 5l-1-1"></path></svg>
+                Select Range for Copy
+            </button>
+            <div class="copy-message" id="copy-message">Data selected! Press Ctrl+C (or ⌘+C) to copy.</div>
+        </div>
+
+        <div class="table-container">
+            <button id="add-column-btn" class="add-column-btn" title="Add new column">+</button>
+            <table id="card-table">
+                <thead>
+                    <tr>
+                        <th class="unselectable-cell" style="width: 40px;"><input type="checkbox" class="checkbox" id="select-all-table" title="Select/Deselect All"></th>
+                        <th class="unselectable-cell" style="width: 60px;">Image</th>
+                        <th class="selectable-cell sortable">Card ID<span class="sort-icon">↕</span></th>
+                        <th class="selectable-cell sortable">Card Name<span class="sort-icon">↕</span></th>
+                        <th class="selectable-cell sortable">Filename<span class="sort-icon">↕</span></th>
+                        <th class="selectable-cell sortable">Type<span class="sort-icon">↕</span></th>
+                        <th class="selectable-cell sortable">Rarity<span class="sort-icon">↕</span></th>
+                        <th class="selectable-cell sortable">Date Added<span class="sort-icon">↕</span></th>
+                        <!-- Placeholder for potential dynamically added columns -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="unselectable-cell"><input type="checkbox" class="checkbox"></td>
+                        <td class="unselectable-cell"><img src="/api/placeholder/40/60" alt="Card Image" class="thumbnail"></td>
+                        <td class="selectable-cell">0001</td>
+                        <td class="selectable-cell">Dragon Knight</td>
+                        <td class="selectable-cell">dragon_knight_v1.png</td>
+                        <td class="selectable-cell type-cell">Monster</td>
+                        <td class="selectable-cell">Rare</td>
+                        <td class="selectable-cell">04/10/2025</td>
+                    </tr>
+                    <tr>
+                        <td class="unselectable-cell"><input type="checkbox" class="checkbox"></td>
+                        <td class="unselectable-cell"><img src="/api/placeholder/40/60" alt="Card Image" class="thumbnail"></td>
+                        <td class="selectable-cell">0002</td>
+                        <td class="selectable-cell">Magic Barrier</td>
+                        <td class="selectable-cell">magic_barrier.png</td>
+                        <td class="selectable-cell type-cell">Spell</td>
+                        <td class="selectable-cell">Common</td>
+                        <td class="selectable-cell">04/12/2025</td>
+                    </tr>
+                    <tr>
+                        <td class="unselectable-cell"><input type="checkbox" class="checkbox"></td>
+                        <td class="unselectable-cell"><img src="/api/placeholder/40/60" alt="Card Image" class="thumbnail"></td>
+                        <td class="selectable-cell">0003</td>
+                        <td class="selectable-cell">Shadow Trap</td>
+                        <td class="selectable-cell">shadow_trap_v2.png</td>
+                        <td class="selectable-cell type-cell">Trap</td>
+                        <td class="selectable-cell">Uncommon</td>
+                        <td class="selectable-cell">04/15/2025</td>
+                    </tr>
+                    <tr>
+                        <td class="unselectable-cell"><input type="checkbox" class="checkbox"></td>
+                        <td class="unselectable-cell"><img src="/api/placeholder/40/60" alt="Card Image" class="thumbnail"></td>
+                        <td class="selectable-cell">0004</td>
+                        <td class="selectable-cell">Mystic Elf</td>
+                        <td class="selectable-cell">mystic_elf.png</td>
+                        <td class="selectable-cell type-cell">Monster</td>
+                        <td class="selectable-cell">Common</td>
+                        <td class="selectable-cell">04/18/2025</td>
+                    </tr>
+                    <tr>
+                        <td class="unselectable-cell"><input type="checkbox" class="checkbox"></td>
+                        <td class="unselectable-cell"><img src="/api/placeholder/40/60" alt="Card Image" class="thumbnail"></td>
+                        <td class="selectable-cell">0005</td>
+                        <td class="selectable-cell">Power Boost</td>
+                        <td class="selectable-cell">power_boost.png</td>
+                        <td class="selectable-cell type-cell">Spell</td>
+                        <td class="selectable-cell">Rare</td>
+                        <td class="selectable-cell">04/20/2025</td>
+                    </tr>
+                    <tr>
+                        <td class="unselectable-cell"><input type="checkbox" class="checkbox"></td>
+                        <td class="unselectable-cell"><img src="/api/placeholder/40/60" alt="Card Image" class="thumbnail"></td>
+                        <td class="selectable-cell">0006</td>
+                        <td class="selectable-cell">Fire Dragon</td>
+                        <td class="selectable-cell">fire_dragon.png</td>
+                        <td class="selectable-cell type-cell">Monster</td>
+                        <td class="selectable-cell">Ultra Rare</td>
+                        <td class="selectable-cell">04/22/2025</td>
+                    </tr>
+                    <tr>
+                        <td class="unselectable-cell"><input type="checkbox" class="checkbox"></td>
+                        <td class="unselectable-cell"><img src="/api/placeholder/40/60" alt="Card Image" class="thumbnail"></td>
+                        <td class="selectable-cell">0007</td>
+                        <td class="selectable-cell">Healing Potion</td>
+                        <td class="selectable-cell">healing_potion.png</td>
+                        <td class="selectable-cell type-cell">Spell</td>
+                        <td class="selectable-cell">Common</td>
+                        <td class="selectable-cell">04/25/2025</td>
+                    </tr>
+                    <tr>
+                        <td class="unselectable-cell"><input type="checkbox" class="checkbox"></td>
+                        <td class="unselectable-cell"><img src="/api/placeholder/40/60" alt="Card Image" class="thumbnail"></td>
+                        <td class="selectable-cell">0008</td>
+                        <td class="selectable-cell">Explosive Rune</td>
+                        <td class="selectable-cell">explosive_rune.png</td>
+                        <td class="selectable-cell type-cell">Trap</td>
+                        <td class="selectable-cell">Uncommon</td>
+                        <td class="selectable-cell">04/28/2025</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Removed spreadsheet controls section, integrated buttons above table -->
+
+        <div class="pagination">
+            <div class="per-page">
+                <span>Show:</span>
+                <select>
+                    <option>10</option>
+                    <option selected>25</option>
+                    <option>50</option>
+                    <option>100</option>
+                    <option>All</option>

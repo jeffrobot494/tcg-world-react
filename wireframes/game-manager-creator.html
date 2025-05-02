@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Manager - Legends of the Dragon Wars</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #475569;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --monster-color: #ffd699;
+            --spell-color: #d9b3ff;
+            --trap-color: #ff99cc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .tcg-world-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            margin-right: 16px;
+            transition: opacity 0.2s;
+        }
+        
+        .tcg-world-link:hover {
+            opacity: 0.85;
+            text-decoration: none;
+        }
+        
+        .tcg-world-icon {
+            width: 28px;
+            height: 28px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin: 0 16px;
+        }
+        
+        .navbar h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        
+        .nav-links a:hover {
+            opacity: 0.85;
+            text-decoration: none;
+        }
+        
+        .profile-icon {
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .profile-icon:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Main Content */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 32px;
+        }
+        
+        .dashboard-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .game-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background-color: #7c3aed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .dashboard-subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+        
+        /* Main Actions */
+        .actions-container {
+            margin-bottom: 36px;
+        }
+        
+        .section-header {
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .action-card {
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            height: 100%;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .action-header {
+            background-color: var(--bg-tertiary);
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .action-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .action-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .action-body {
+            padding: 20px;
+        }
+        
+        .action-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .action-button:hover {
+            background-color: var(--accent-hover);
+            text-decoration: none;
+        }
+        
+        /* Key Stats */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 36px;
+        }
+        
+        .stat-card {
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .stat-title {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background-color: rgba(59, 130, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+        
+        .card-icon {
+            background-color: rgba(124, 58, 237, 0.2);
+            color: #7c3aed;
+        }
+        
+        .deck-icon {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .player-icon {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .activity-icon {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        
+        .change-up {
+            color: var(--success);
+        }
+        
+        .change-down {
+            color: var(--danger);
+        }
+        
+        /* Recent Activity */
+        .activity-container {
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .activity-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .view-all {
+            color: var(--accent);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .view-all:hover {
+            text-decoration: underline;
+        }
+        
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .activity-icon-container {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: rgba(59, 130, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        
+        .activity-card-icon {
+            background-color: rgba(124, 58, 237, 0.2);
+            color: #7c3aed;
+        }
+        
+        .activity-deck-icon {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .activity-player-icon {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .activity-details {
+            flex: 1;
+        }
+        
+        .activity-message {
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+        
+        .activity-time {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .highlight {
+            color: var(--accent);
+            font-weight: 500;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-container {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="#" class="tcg-world-link">
+                <div class="tcg-world-icon">🃏</div>
+                <span>TCG World</span>
+            </a>
+            <div class="nav-divider"></div>
+            <h1>Legends of the Dragon Wars</h1>
+        </div>
+        <div class="nav-links">
+            <a href="#">Dashboard</a>
+            <div class="profile-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <div class="game-icon">🐉</div>
+                Game Manager
+            </div>
+            <div class="dashboard-subtitle">Manage your game, cards, and player experience</div>
+        </div>
+        
+        <!-- Main Actions -->
+        <div class="actions-container">
+            <h2 class="section-header">Manage Your Game</h2>
+            
+            <div class="actions-grid">
+                <!-- Card Manager Action -->
+                <div class="action-card">
+                    <div class="action-header">
+                        <h3 class="action-title">Card Manager</h3>
+                        <p class="action-description">Upload, edit, and organize your game's cards. Manage card attributes, images, and balance your gameplay.</p>
+                    </div>
+                    <div class="action-body">
+                        <a href="#" class="action-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
+                                <path d="M12 6v12"></path>
+                                <path d="M6 12h12"></path>
+                            </svg>
+                            Manage Cards
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Deck Builder Action -->
+                <div class="action-card">
+                    <div class="action-header">
+                        <h3 class="action-title">Deck Builder</h3>
+                        <p class="action-description">Access your game's deck builder to test card interactions, create example decks, and test game balance.</p>
+                    </div>
+                    <div class="action-body">
+                        <a href="#" class="action-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                            Open Deck Builder
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Game Page Editor Action -->
+                <div class="action-card">
+                    <div class="action-header">
+                        <h3 class="action-title">Game Page Editor</h3>
+                        <p class="action-description">Customize your game's public page, upload artwork, write game lore, and showcase features.</p>
+                    </div>
+                    <div class="action-body">
+                        <a href="#" class="action-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit Game Page
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-container">
+            <!-- Cards Stat -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Total Cards</div>
+                    <div class="stat-icon card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
+                            <path d="M12 6v12"></path>
+                            <path d="M6 12h12"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value">142</div>
+                <div class="stat-change change-up">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                    +8 this month
+                </div>
+            </div>
+            
+            <!-- Decks Stat -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Player Decks</div>
+                    <div class="stat-icon deck-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value">894</div>
+                <div class="stat-change change-up">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                    +128 this month
+                </div>
+            </div>
+            
+            <!-- Players Stat -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Active Players</div>
+                    <div class="stat-icon player-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value">1,827</div>
+                <div class="stat-change change-up">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                    +32% this month
+                </div>
+            </div>
+            
+            <!-- Activity Stat -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Engagement Rate</div>
+                    <div class="stat-icon activity-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value">72%</div>
+                <div class="stat-change change-up">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                    +7% this month
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="activity-container">
+            <div class="activity-header">
+                <h2 class="activity-title">Recent Activity</h2>
+                <a href="#" class="view-all">View All Activity</a>
+            </div>
+            
+            <div class="activity-list">
+                <!-- Activity Item 1 -->
+                <div class="activity-item">
+                    <div class="activity-icon-container activity-player-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-message">
+                            <span class="highlight">32 new players</span> joined your game in the last 24 hours
+                        </div>
+                        <div class="activity-time">Today at 9:42 AM</div>
+                    </div>
+                </div>
+                
+                <!-- Activity Item 2 -->
+                <div class="activity-item">
+                    <div class="activity-icon-container activity-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
+                            <path d="M12 6v12"></path>
+                            <path d="M6 12h12"></path>
+                        </svg>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-message">
+                            You added <span class="highlight">8 new cards</span> to the "Elemental Masters" expansion
+                        </div>
+                        <div class="activity-time">Yesterday at 2:15 PM</div>
+                    </div>
+                </div>
+                
+                <!-- Activity Item 3 -->
+                <div class="activity-item">
+                    <div class="activity-icon-container activity-deck-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-message">
+                            <span class="highlight">DragonSlayer92's</span> deck "Fire and Ice" has been featured with <span class="highlight">128 likes</span>
+                        </div>
+                        <div class="activity-time">Yesterday at 11:30 AM</div>
+                    </div>
+                </div>
+                
+                <!-- Activity Item 4 -->
+                <div class="activity-item">
+                    <div class="activity-icon-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-message">
+                            You updated the <span class="highlight">game rules</span> for tournament play
+                        </div>
+                        <div class="activity-time">2 days ago</div>
+                    </div>
+                </div>
+                
+                <!-- Activity Item 5 -->
+                <div class="activity-item">
+                    <div class="activity-icon-container activity-player-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-message">
+                            <span class="highlight">Community tournament</span> has 64 players registered so far
+                        </div>
+                        <div class="activity-time">3 days ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Any JavaScript functionality would go here
+        // For example, animations, interactive charts, or real-time updates
+    </script>
+</body>
+</html>
