@@ -13,6 +13,13 @@ export const ROUTES = {
     CARDS: '/games/:gameId/cards',
     DECKS: '/games/:gameId/decks',
     EDITOR: '/games/:gameId/editor'
+  },
+  // Test routes for development
+  TEST: {
+    GAMES: '/api-test/games',
+    CARDS: '/api-test/cards',
+    DECKS: '/api-test/decks',
+    CONSISTENCY: '/api-test/consistency'
   }
 };
 

@@ -1,0 +1,91 @@
+.deckManager {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+}
+
+.deckHeader {
+  margin-bottom: 1rem;
+}
+
+.deckNameContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.deckName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.deckNameInput {
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  background-color: var(--background-input);
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.deckNameInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.editNameButton {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  margin-left: 0.5rem;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editNameButton:hover {
+  color: var(--primary);
+  background-color: var(--background-hover);
+}
+
+.deckActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.deckContent {
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0; /* Allows flex item to shrink below content size */
+  margin-bottom: 1rem;
+}
+
+.deckStats {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.cardCounter {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.maxCards {
+  color: var(--error);
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ROUTES, 
@@ -6,41 +6,61 @@ import {
   getGameDecksRoute, 
   getGameEditorRoute 
 } from '../router/routes';
+import { gameService } from '../services/gameService';
 import Navbar from '../components/common/Navbar';
 import Header from '../components/common/Header';
 import Grid from '../components/common/Grid';
 import ActionCard from '../components/gameManager/ActionCard';
 import styles from './GameManager.module.css';
 
-// Sample game data for reference - in a real app, this would come from an API
-const sampleGames = [
-  {
-    id: '1',
-    title: 'Fantasy Realms',
-    icon: '🧙‍♂️',
-  },
-  {
-    id: '2',
-    title: 'Cyber Wars',
-    icon: '🤖',
-  },
-  {
-    id: '3',
-    title: 'Ancient Battles',
-    icon: '⚔️',
-  }
-];
-
 const GameManager = () => {
   const { gameId } = useParams(); // Get the gameId from URL params
   const navigate = useNavigate();
   
-  // Find the game data based on the gameId
-  const gameData = sampleGames.find(game => game.id === gameId) || {
+  // State for game data
+  const [gameData, setGameData] = useState({
     id: gameId || '0',
-    title: "Unknown Game",
-    icon: "🎮"
-  };
+    title: 'Loading...',
+    icon: '🎮'
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Fetch game data when component mounts
+  useEffect(() => {
+    const fetchGameData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await gameService.getGame(gameId);
+        
+        if (response.success) {
+          setGameData({
+            ...response.data,
+            // Ensure icon is available
+            icon: response.data.icon || '🎮'
+          });
+        } else {
+          setError(response.error.message);
+          setGameData({
+            id: gameId || '0',
+            title: 'Unknown Game',
+            icon: '🎮'
+          });
+        }
+      } catch (err) {
+        setError('Failed to load game data');
+        console.error('Error fetching game data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (gameId) {
+      fetchGameData();
+    }
+  }, [gameId]);
   
   // Define actions with proper routes for this specific game
   const gameActions = [

@@ -1,0 +1,51 @@
+.controlsGroup {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.searchInput {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  width: 250px;
+}
+
+.searchInput::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Buttons already defined in Button component, but we need specific styling for buttons with icons */
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.iconButton svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Disabled state for action buttons */
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .controlsGroup {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+}

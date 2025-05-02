@@ -33,4 +33,4 @@ The project is TCG-World, a deckbuilder web app for indie TCG creators to host t
 
 ##Understanding the project
 Please read "./views.md" to understand the project architecture. 
-Please read "./component-hierarchy" to understand the react components we will build first.
+Please read "./prompt.txt" to understand our general approach to building out the core components of the TCG World front end.

@@ -1,0 +1,81 @@
+.cardRow:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.cardRow td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.checkbox {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  margin: 0 auto;
+  display: block;
+}
+
+.checkboxCell {
+  width: 3rem;
+  text-align: center;
+}
+
+.imageCell {
+  width: 3.5rem;
+}
+
+.thumbnail {
+  width: 2.5rem;
+  height: 3.75rem;
+  object-fit: cover;
+  border-radius: 2px;
+  background-color: var(--bg-secondary);
+}
+
+/* Different styles for card types */
+.cardTypeMonster {
+  color: #ffd699; /* Lighter version of monster-color for dark theme */
+}
+
+.cardTypeSpell {
+  color: #d9b3ff; /* Lighter version of spell-color for dark theme */
+}
+
+.cardTypeTrap {
+  color: #ff99cc; /* Lighter version of trap-color for dark theme */
+}
+
+/* Editable cells */
+.editableCell {
+  position: relative;
+}
+
+.editInput {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.editSelect {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+/* Selected row highlight */
+.selectedRow {
+  background-color: rgba(59, 130, 246, 0.15); /* Accent color with opacity */
+}
+
+.selectedRow:hover {
+  background-color: rgba(59, 130, 246, 0.25); /* Slightly darker on hover */
+}

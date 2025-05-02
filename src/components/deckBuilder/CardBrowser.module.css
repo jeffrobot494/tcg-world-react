@@ -1,0 +1,15 @@
+.cardBrowser {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.paginationContainer {
+  margin-top: auto;
+  padding: 1rem 0;
+}

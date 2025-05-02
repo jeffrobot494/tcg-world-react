@@ -1,0 +1,212 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: var(--text-primary);
+}
+
+.title {
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+}
+
+.error {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.formContainer {
+  background-color: var(--background-elevated);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.input, .select, .textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  background-color: var(--background-input);
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: var(--primary);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: var(--primary-dark);
+}
+
+.button:disabled {
+  background-color: var(--background-button);
+  cursor: not-allowed;
+}
+
+.buttonSecondary {
+  background-color: var(--background-button);
+  color: var(--text-primary);
+}
+
+.buttonSecondary:hover {
+  background-color: var(--border);
+}
+
+.buttonDanger {
+  background-color: #ef4444;
+}
+
+.buttonDanger:hover {
+  background-color: #dc2626;
+}
+
+.buttonSmall {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.gameListContainer {
+  background-color: var(--background-elevated);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.gameListHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.gameList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.gameCard {
+  background-color: var(--background-card);
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.gameCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.gameCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.gameTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gameIcon {
+  font-size: 1.5rem;
+}
+
+.gameActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.gameDescription {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+.gameStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.gameStat {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.gameStatLabel {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.noData {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+  border: 1px dashed var(--border);
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .gameCardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .gameActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

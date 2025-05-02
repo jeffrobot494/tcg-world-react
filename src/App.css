@@ -1,3 +1,37 @@
+:root {
+  /* Base colors */
+  --primary: #7c3aed;
+  --primary-light: #9f7aea;
+  --primary-dark: #6b21a8;
+  --secondary: #4f46e5;
+  --accent: #3b3363;
+  --error: #ef4444;
+  --success: #10b981;
+  --warning: #eab308;
+  
+  /* Background colors */
+  --background: #121212;
+  --background-card: #1e1e1e;
+  --background-elevated: #252525;
+  --background-header: #2a2a2a;
+  --background-hover: rgba(255, 255, 255, 0.05);
+  --background-input: #2d2d2d;
+  --background-button: #333333;
+  
+  /* Text colors */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-disabled: #6b7280;
+  
+  /* Border colors */
+  --border: #3a3a3a;
+  
+  /* Card type colors */
+  --card-monster: rgba(255, 153, 0, 0.2);
+  --card-spell: rgba(147, 112, 219, 0.2);
+  --card-trap: rgba(255, 105, 180, 0.2);
+}
+
 .App {
   text-align: center;
 }
