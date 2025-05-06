@@ -122,8 +122,8 @@ export const cardApi = {
       return errorResponse('GAME_NOT_FOUND', 'Game not found');
     }
     
-    // Generate new card ID
-    const newId = `card_${Date.now().toString(36)}`;
+    // Generate new card ID in numeral-only format
+    const newId = Date.now().toString().slice(-6).padStart(4, '0');
     
     // Create new card
     const newCard = {
@@ -203,14 +203,22 @@ export const cardApi = {
     await delay(500);
     
     if (!Array.isArray(cardIds) || cardIds.length === 0) {
-      return errorResponse('INVALID_REQUEST', 'No cards specified for deletion');
+      // Return success with no deletions instead of an error
+      return successResponse({
+        message: 'No cards specified for deletion',
+        deletedCount: 0
+      });
     }
     
     // Find all valid cards to delete
     const cardsToDelete = store.cards.filter(card => cardIds.includes(card.id));
     
     if (cardsToDelete.length === 0) {
-      return errorResponse('CARDS_NOT_FOUND', 'None of the specified cards were found');
+      // Return success with no deletions instead of an error
+      return successResponse({
+        message: 'No matching cards found to delete',
+        deletedCount: 0
+      });
     }
     
     // Track affected games to update counts
@@ -234,7 +242,8 @@ export const cardApi = {
     });
     
     return successResponse({
-      message: `Successfully deleted ${cardsToDelete.length} cards`
+      message: `Successfully deleted ${cardsToDelete.length} cards`,
+      deletedCount: cardsToDelete.length
     });
   }
 };

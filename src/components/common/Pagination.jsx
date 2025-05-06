@@ -18,6 +18,11 @@ const Pagination = ({
     const pages = [];
     const maxDisplayedPages = 5; // Show max 5 page numbers at once
     
+    // If showing all items, return empty array (no pagination needed)
+    if (itemsPerPage === Infinity) {
+      return pages;
+    }
+    
     let startPage = Math.max(1, currentPage - Math.floor(maxDisplayedPages / 2));
     let endPage = Math.min(startPage + maxDisplayedPages - 1, totalPages);
     
@@ -42,75 +47,104 @@ const Pagination = ({
 
   // Handle items per page change
   const handleItemsPerPageChange = (e) => {
-    const newItemsPerPage = Number(e.target.value);
+    const value = e.target.value;
+    const newItemsPerPage = value === 'all' ? Infinity : Number(value);
     onItemsPerPageChange(newItemsPerPage);
   };
 
   // Calculate the range of items being displayed
-  const firstItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
-  const lastItem = Math.min(currentPage * itemsPerPage, totalItems);
+  let firstItem = 0;
+  let lastItem = 0;
+  
+  if (totalItems > 0) {
+    // Handle the special case where itemsPerPage is Infinity (All)
+    if (itemsPerPage === Infinity) {
+      firstItem = 1;
+      lastItem = totalItems;
+    } else {
+      firstItem = (currentPage - 1) * itemsPerPage + 1;
+      lastItem = Math.min(currentPage * itemsPerPage, totalItems);
+    }
+  }
   
   return (
     <div className={styles.pagination}>
-      <div className={styles.pageInfo}>
-        Showing {firstItem} to {lastItem} of {totalItems} items
-      </div>
-      
-      <div className={styles.pageControls}>
-        <button 
-          className={styles.pageButton}
-          onClick={() => handlePageChange(1)} 
-          disabled={currentPage === 1}
-        >
-          First
-        </button>
-        
-        <button 
-          className={styles.pageButton}
-          onClick={() => handlePageChange(currentPage - 1)} 
-          disabled={currentPage === 1}
-        >
-          Prev
-        </button>
-        
-        {getPageNumbers().map(page => (
-          <button
-            key={page}
-            onClick={() => handlePageChange(page)}
-            className={`${styles.pageButton} ${currentPage === page ? styles.active : ''}`}
+      <div className={styles.paginationControls}>
+        {/* Show per page dropdown */}
+        <div className={styles.perPage}>
+          <span>Show:</span>
+          <select 
+            value={itemsPerPage === Infinity ? 'all' : itemsPerPage} 
+            onChange={handleItemsPerPageChange}
           >
-            {page}
-          </button>
-        ))}
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+            <option value="all">All</option>
+          </select>
+          <span>per page</span>
+        </div>
         
-        <button 
-          className={styles.pageButton}
-          onClick={() => handlePageChange(currentPage + 1)} 
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
+        {/* Separator */}
+        <div className={styles.separator}>|</div>
         
-        <button 
-          className={styles.pageButton}
-          onClick={() => handlePageChange(totalPages)} 
-          disabled={currentPage === totalPages}
-        >
-          Last
-        </button>
-      </div>
-      
-      <div className={styles.perPage}>
-        <span>Show:</span>
-        <select 
-          value={itemsPerPage} 
-          onChange={handleItemsPerPageChange}
-        >
-          <option value={10}>10</option>
-          <option value={25}>25</option>
-          <option value={50}>50</option>
-          <option value={100}>100</option>
-        </select>
+        {/* Page info */}
+        <div className={styles.pageInfo}>
+          Showing {firstItem} to {lastItem} of {totalItems} cards
+        </div>
+        
+        {/* Separator */}
+        <div className={styles.separator}>|</div>
+        
+        {/* Page controls */}
+        <div className={styles.pageButtons}>
+          {itemsPerPage !== Infinity && (
+            <>
+              <button 
+                className={styles.pageButton}
+                onClick={() => handlePageChange(1)} 
+                disabled={currentPage === 1 || totalPages === 0}
+              >
+                First
+              </button>
+              
+              <button 
+                className={styles.pageButton}
+                onClick={() => handlePageChange(currentPage - 1)} 
+                disabled={currentPage === 1 || totalPages === 0}
+              >
+                &lt;
+              </button>
+              
+              {getPageNumbers().map(page => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`${styles.pageButton} ${currentPage === page ? styles.active : ''}`}
+                >
+                  {page}
+                </button>
+              ))}
+              
+              <button 
+                className={styles.pageButton}
+                onClick={() => handlePageChange(currentPage + 1)} 
+                disabled={currentPage === totalPages || totalPages === 0}
+              >
+                &gt;
+              </button>
+              
+              <button 
+                className={styles.pageButton}
+                onClick={() => handlePageChange(totalPages)} 
+                disabled={currentPage === totalPages || totalPages === 0}
+              >
+                Last
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

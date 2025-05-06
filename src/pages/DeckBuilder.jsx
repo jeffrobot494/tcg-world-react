@@ -5,7 +5,8 @@ import CardBrowser from '../components/deckBuilder/CardBrowser';
 import DeckManager from '../components/deckBuilder/DeckManager';
 import ExportDeckModal from '../components/deckBuilder/ExportDeckModal';
 import { getGameManagerRoute } from '../router/routes';
-import sampleCards from '../data/sampleCards';
+import { gameService } from '../services/gameService';
+import { cardService } from '../services/cardService';
 import styles from './DeckBuilder.module.css';
 
 /**
@@ -16,20 +17,23 @@ const DeckBuilder = () => {
   const { gameId } = useParams();
   const navigate = useNavigate();
   
-  // Game data (placeholder - would be fetched based on gameId)
-  const gameData = {
-    id: gameId || '1',
-    title: gameId === '1' ? 'Fantasy Realms' : 
-           gameId === '2' ? 'Cyber Wars' : 
-           gameId === '3' ? 'Ancient Battles' : 
-           'Unknown Game',
+  // State for game data
+  const [gameData, setGameData] = useState({
+    id: gameId || '',
+    title: 'Loading...',
     icon: '🎮'
-  };
+  });
+  const [gameDataLoading, setGameDataLoading] = useState(true);
+  const [gameDataError, setGameDataError] = useState(null);
   
-  // State management
-  const [allCards, setAllCards] = useState(sampleCards);
+  // State for cards data and UI
+  const [allCards, setAllCards] = useState([]);
   const [filteredCards, setFilteredCards] = useState([]);
   const [displayedCards, setDisplayedCards] = useState([]);
+  const [cardsLoading, setCardsLoading] = useState(true);
+  const [cardsError, setCardsError] = useState(null);
+  
+  // State for deck
   const [deckCards, setDeckCards] = useState(new Map());
   const [deckName, setDeckName] = useState("New Deck");
   
@@ -41,11 +45,80 @@ const DeckBuilder = () => {
   const [pagination, setPagination] = useState({
     currentPage: 1,
     itemsPerPage: 12,
-    totalItems: allCards.length
+    totalItems: 0
   });
   
   // UI state
   const [showExportModal, setShowExportModal] = useState(false);
+  
+  // Fetch game data when component mounts
+  useEffect(() => {
+    const fetchGameData = async () => {
+      try {
+        setGameDataLoading(true);
+        setGameDataError(null);
+        
+        const response = await gameService.getGame(gameId);
+        
+        if (response.success) {
+          setGameData({
+            ...response.data,
+            // Ensure icon is available
+            icon: response.data.icon || '🎮'
+          });
+        } else {
+          setGameDataError(response.error.message);
+          setGameData({
+            id: gameId || '',
+            title: 'Unknown Game',
+            icon: '🎮'
+          });
+        }
+      } catch (err) {
+        setGameDataError('Failed to load game data');
+        console.error('Error fetching game data:', err);
+      } finally {
+        setGameDataLoading(false);
+      }
+    };
+    
+    if (gameId) {
+      fetchGameData();
+    }
+  }, [gameId]);
+  
+  // Fetch cards data when component mounts
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        setCardsLoading(true);
+        setCardsError(null);
+        
+        const response = await cardService.getCards(gameId);
+        
+        if (response.success) {
+          setAllCards(response.data);
+          setPagination(prev => ({
+            ...prev,
+            totalItems: response.data.length
+          }));
+        } else {
+          setCardsError(response.error.message);
+          setAllCards([]);
+        }
+      } catch (err) {
+        setCardsError('Failed to load cards');
+        console.error('Error fetching cards:', err);
+        setAllCards([]);
+      } finally {
+        setCardsLoading(false);
+      }
+    };
+    
+    if (gameId) {
+      fetchCards();
+    }
+  }, [gameId]);
   
   // Apply search and type filter
   useEffect(() => {
@@ -183,6 +256,40 @@ const DeckBuilder = () => {
   const handleBackToGameManager = () => {
     navigate(getGameManagerRoute(gameId));
   };
+  
+  // Show loading state for both game data and cards
+  if (gameDataLoading || cardsLoading) {
+    return (
+      <div className={styles.deckBuilderContainer}>
+        <Navbar 
+          gameTitle="Loading..."
+          showTcgWorldLink={true}
+          onNavigate={handleBackToGameManager}
+        />
+        <div className={styles.loading}>
+          Loading deck builder...
+        </div>
+      </div>
+    );
+  }
+  
+  // Show error state
+  if (gameDataError || cardsError) {
+    return (
+      <div className={styles.deckBuilderContainer}>
+        <Navbar 
+          gameTitle={gameDataError ? "Error" : gameData.title}
+          showTcgWorldLink={true}
+          onNavigate={handleBackToGameManager}
+        />
+        <div className={styles.error}>
+          {gameDataError && <p>Error loading game data: {gameDataError}</p>}
+          {cardsError && <p>Error loading cards: {cardsError}</p>}
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className={styles.deckBuilderContainer}>

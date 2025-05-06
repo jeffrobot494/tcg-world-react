@@ -13,11 +13,12 @@ const generateId = (prefix) => `${prefix}_${Date.now().toString(36)}_${Math.rand
 /**
  * Initial card data
  * These are sample cards for the games in our mock database
+ * Card IDs use numeral-only format (e.g., "0001")
  */
 const initialCards = [
   // Fantasy Realms cards
   {
-    id: "card_001",
+    id: "0001",
     gameId: "game_001",
     name: "Dragon Knight",
     type: "Monster",
@@ -33,7 +34,7 @@ const initialCards = [
     updatedAt: "2023-01-15T08:30:00Z"
   },
   {
-    id: "card_002",
+    id: "0002",
     gameId: "game_001",
     name: "Magic Barrier",
     type: "Spell",
@@ -47,7 +48,7 @@ const initialCards = [
     updatedAt: "2023-01-15T09:15:00Z"
   },
   {
-    id: "card_003",
+    id: "0003",
     gameId: "game_001",
     name: "Shadow Trap",
     type: "Trap",
@@ -63,7 +64,7 @@ const initialCards = [
   
   // Cyber Wars cards
   {
-    id: "card_101",
+    id: "0101",
     gameId: "game_002",
     name: "Cyber Soldier",
     type: "Monster",
@@ -79,7 +80,7 @@ const initialCards = [
     updatedAt: "2023-02-22T10:30:00Z"
   },
   {
-    id: "card_102",
+    id: "0102",
     gameId: "game_002",
     name: "Firewall",
     type: "Spell",
@@ -95,7 +96,7 @@ const initialCards = [
   
   // Ancient Battles cards
   {
-    id: "card_201",
+    id: "0201",
     gameId: "game_003",
     name: "Roman Legionnaire",
     type: "Monster",
@@ -111,7 +112,7 @@ const initialCards = [
     updatedAt: "2023-03-12T09:45:00Z"
   },
   {
-    id: "card_202",
+    id: "0202",
     gameId: "game_003",
     name: "Cavalry Charge",
     type: "Spell",
@@ -129,6 +130,7 @@ const initialCards = [
 /**
  * Initial deck data
  * These are sample decks for the games in our mock database
+ * Card IDs use numeral-only format (e.g., "0001")
  */
 const initialDecks = [
   {
@@ -138,9 +140,9 @@ const initialDecks = [
     name: "Dragon Dominance",
     description: "A powerful dragon-focused deck",
     cards: [
-      { cardId: "card_001", quantity: 3 },
-      { cardId: "card_002", quantity: 2 },
-      { cardId: "card_003", quantity: 1 }
+      { cardId: "0001", quantity: 3 },
+      { cardId: "0002", quantity: 2 },
+      { cardId: "0003", quantity: 1 }
     ],
     cardCount: 6,
     isPublic: true,
@@ -154,8 +156,8 @@ const initialDecks = [
     name: "Cyber Defense",
     description: "A defensive cyber deck",
     cards: [
-      { cardId: "card_101", quantity: 4 },
-      { cardId: "card_102", quantity: 2 }
+      { cardId: "0101", quantity: 4 },
+      { cardId: "0102", quantity: 2 }
     ],
     cardCount: 6,
     isPublic: true,
@@ -169,8 +171,8 @@ const initialDecks = [
     name: "Roman Legion",
     description: "A deck focused on Roman military tactics",
     cards: [
-      { cardId: "card_201", quantity: 3 },
-      { cardId: "card_202", quantity: 2 }
+      { cardId: "0201", quantity: 3 },
+      { cardId: "0202", quantity: 2 }
     ],
     cardCount: 5,
     isPublic: false,

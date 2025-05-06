@@ -20,10 +20,19 @@ const ActionCard = ({
     </div>
   );
 
+  const handleCardClick = (e) => {
+    // Only trigger onClick if the click wasn't on a button
+    if (e.target.tagName.toLowerCase() !== 'button' && 
+        !e.target.closest('button')) {
+      onClick();
+    }
+  };
+
   return (
     <Card
       className={`${styles.actionCard} ${className}`}
       headerContent={headerContent}
+      onClick={handleCardClick}
       {...props}
     >
       <div className={styles.actionBody}>

@@ -26,14 +26,18 @@ const GameGrid = ({
   return (
     <div className={`${styles.gameGridContainer} ${className}`} {...props}>
       <div className={styles.gamesGrid}>
-        {games.map(game => (
-          <GameCard
-            key={game.id}
-            game={game}
-            onClick={onGameClick}
-            onManage={onGameManage}
-          />
-        ))}
+        {games.map(game => {
+          console.log('Rendering GameCard for game:', game.id);
+          console.log('onGameClick is:', onGameClick);
+          return (
+            <GameCard
+              key={game.id}
+              game={game}
+              onClick={onGameClick}
+              onManage={onGameManage}
+            />
+          );
+        })}
       </div>
     </div>
   );

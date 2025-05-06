@@ -92,3 +92,30 @@ a:hover {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border);
 }
+
+/* Dark theme styles for select dropdowns */
+select option {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Firefox specific styles */
+@-moz-document url-prefix() {
+  select {
+    color: var(--text-primary);
+    background-color: var(--bg-tertiary);
+  }
+  
+  select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 var(--text-primary);
+  }
+}
+
+/* Edge and Internet Explorer specific styles */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  select option {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+  }
+}

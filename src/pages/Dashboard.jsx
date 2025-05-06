@@ -118,6 +118,8 @@ const Dashboard = () => {
   };
   
   const handleGameClick = (gameId) => {
+    console.log('handleGameClick called with gameId:', gameId);
+    console.log('Navigating to:', getGameManagerRoute(gameId));
     // Navigate to the game manager
     navigate(getGameManagerRoute(gameId));
   };

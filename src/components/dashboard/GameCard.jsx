@@ -25,7 +25,20 @@ const GameCard = ({
   return (
     <div 
       className={`${styles.gameCard} ${className}`}
-      onClick={() => onClick(id)}
+      onClick={(e) => {
+        console.log('GameCard clicked!');
+        console.log('Event target:', e.target);
+        console.log('Target tag name:', e.target.tagName);
+        console.log('Game ID:', id);
+        
+        // Ensure the click wasn't on a child button
+        if (e.target.tagName.toLowerCase() !== 'button') {
+          console.log('Calling onClick with ID:', id);
+          onClick(id);
+        } else {
+          console.log('Click was on a button, not navigating');
+        }
+      }}
       {...props}
     >
       <div className={styles.gameImage}>

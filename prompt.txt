@@ -1,71 +1,31 @@
-React TCG World Project Setup Instructions
-I need help building a React application for a Trading Card Game platform called TCG World. We'll be focusing on the creator-side functionality first. Below is the component hierarchy and structure I'd like to implement.
-Project Setup
-Please set up a new React project using Create React App or Vite with the following folder structure:
+1) In edit mode
+	a) If one or more are checked, any changes I make to one are applied to all of them. (mainly for type)
+	b) I can upload images by clicking on the image
+		-) If I have multiple selected, and I upload multiple images, each image is applied to a different checked card.
+		-) file name is automatically set
+	c) All the fields have an "editable" LOOk to them, get rid of this white background on mouse over. They are all just styled with borders to look clickable/editable.
 
-read "./component-hierarchy.txt" to see the full component hierarchy we will start with.
+MONDAY - FINISHING THE CARDMANAGER
+COMBO 1: Practice uploading/managing all the cards for wftS v3.
+	-make chernges and additions
+COMBO 2: Practice uploading/managing 60 magic cards
+	-make changes and additions
+COMBO 3: Practice uploading/managing 60 Pokémon cards
+	-make changes and additions
+COMBO 4:
+	Get the shareable link working
+	Imagine the google sheet functionality
+	Imagine how this will all work with a real database
 
-Common Components:
-
-Create a reusable Button.jsx with support for different variants (primary, secondary)
-Build a base Card.jsx component that other card types will extend
-Implement a Navbar.jsx component with the TCG World logo and navigation links
-Create a generic Table.jsx component that can be extended for different data types
-
-
-Dashboard Components:
-
-Build a GameCard.jsx component that extends the base Card component
-Implement a GameGrid.jsx to display game cards in a grid layout
-Create a DashboardStats.jsx component for analytics
-
-
-Card Manager Components:
-
-Implement CardManagerControls.jsx with search, filter, and add buttons
-Create a CardTable.jsx component that extends the base Table
-Build a CardRow.jsx component for displaying card information in rows
-Add a Pagination.jsx component for navigating through pages of cards
-
-
-Deck Builder Components:
-
-Create DeckBuilderControls.jsx with search and filtering options
-Implement CardGrid.jsx for displaying cards to select from
-Build CardCard.jsx to show cards in the grid
-Create DeckList.jsx to show cards in the current deck
-Add DeckControls.jsx for deck actions (save, export, etc.)
-Implement DeckCard.jsx for cards shown in the deck list
-
-
-
-Component Implementation Strategy
-
-Start with common components since they'll be used throughout the application
-Move on to Dashboard components to build the main landing page
-Implement Card Manager components next
-Finally, add Deck Builder components
-
-Data Management (Temporary)
-For now, use static data or localStorage for managing card and deck data. Later, we'll connect to an API. Add placeholder data for:
-
-Game cards on the dashboard
-Cards in the card manager
-Cards available in the deck builder
-
-Component Design Philosophy
-
-Use composition over inheritance when possible
-Keep components focused on a single responsibility
-Share styles using CSS modules or styled-components
-Use props for component configuration
-Implement event handlers as function props for parent-child communication
-
-Routing
-Set up basic routing using React Router with these routes:
-
-/ → Dashboard.jsx
-/card-manager → CardManager.jsx
-/deck-builder → DeckBuilder.jsx
-
-Please start by implementing the common components (Navbar, Button, Card, Table) and then the Dashboard page. We'll review those components before moving on to the more complex views.
+TODO:
+1) Add option to set a thumbnail pic? Add a Game Settings page?
+2) Clicking the "Card Manager" card should take me there.
+3) Type is defaulting to spell/trap/monster, I need to be able to change that. 
+4) Maybe "type" shouldn't be a default? Although essentially all games have types, so it does seem helpful.
+	a) When I'm in edit mode, I should be able to edit the type columns with a modal window, like:
+		-) Name, options, multiple at once?
+5) Get rid of the white background on the type dropdown, make it dark like the rest of the theme.
+6) When we mouse over a card image, in edit mode and normal mode, the card pops up zoomed in so we can the stats.
+7) In edit mode, the custom attributes are outside the width of the table and aren't visible and so can't be edited.
+8) We need to be able to move the columns around to get the important ones on the left
+9) How to display big effect boxes? Maybe a "see more" button to temporarily expand the field?

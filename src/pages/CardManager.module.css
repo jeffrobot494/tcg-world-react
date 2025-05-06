@@ -5,11 +5,13 @@
 }
 
 .content {
-  max-width: 1200px;
+  min-width: 1000px; /* Minimum width */
+  max-width: 1600px; /* Maximum width */
   margin: 0 auto;
   padding: 2rem;
   flex: 1;
   width: 100%;
+  overflow-x: auto; /* Keep scrolling for when table is very wide */
 }
 
 .header {

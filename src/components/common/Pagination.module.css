@@ -1,20 +1,30 @@
 .pagination {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 1px solid var(--border);
   color: var(--text-secondary);
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   flex-wrap: wrap;
-  gap: 1rem;
+}
+
+.separator {
+  color: var(--border);
+  margin: 0 0.25rem;
 }
 
 .pageInfo {
   font-size: 0.875rem;
 }
 
-.pageControls {
+.pageButtons {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -66,19 +76,27 @@
 }
 
 @media (max-width: 768px) {
-  .pagination {
+  .paginationControls {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+    width: 100%;
   }
-
-  .pageControls {
+  
+  .separator {
+    display: none;
+  }
+  
+  .pageButtons {
     width: 100%;
     justify-content: center;
   }
-
+  
   .perPage {
     width: 100%;
-    justify-content: flex-end;
+  }
+  
+  .pageInfo {
+    width: 100%;
   }
 }
